@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div class="container">
     <div class="empty-settings-row"></div>
-    <BoolSetting label="Aktiver endringer" :modelValue="localSettings.active" @change="updateValue('active', $event)" />
+    <BoolSetting
+      label="Aktiver endringer"
+      :modelValue="localSettings.active"
+      @change="updateValue('active', $event)"
+    />
     <div class="empty-settings-row"></div>
     <SliderSetting
       label="Luft fra kanten"
@@ -106,10 +110,9 @@ export default {
 };
 </script>
 <style scoped>
-.empty-settings-row {
-  background: #eaeaea;
+.container {
+  display: inline-block;
   width: 100%;
-  height: 20px;
-  border-bottom: 1px solid #d8d8d8;
+  position: absolute;
 }
 </style>

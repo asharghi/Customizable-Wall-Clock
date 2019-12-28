@@ -1,15 +1,12 @@
 <template>
   <div class="settings-row">
-    <div class="settings-label">
-      {{label}}
-    </div>
+    <div class="settings-font">{{label}}</div>
     <div>
       <label class="switch">
-      <input type="checkbox" v-model="localValue" @input="$emit('change', !localValue)"/>
-      <span class="slider"></span>
-    </label>
+        <input type="checkbox" v-model="localValue" @input="$emit('change', !localValue)" />
+        <span class="slider"></span>
+      </label>
     </div>
-    
   </div>
 </template>
 
@@ -22,7 +19,7 @@ export default {
     },
     label: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
@@ -38,35 +35,17 @@ export default {
 };
 </script>
 <style scoped>
-.settings-row {
-  padding: 10px 20px 10px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid #d8d8d8;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.settings-label {
-  font-family: sans-serif;
-  color: #5c5c5c;
-  font-weight: 100;
-  font-size: 14px;
-}
-
 .switch {
   display: inline-block;
   position: relative;
   width: 60px;
   height: 34px;
 }
-
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-
 .slider {
   position: absolute;
   cursor: pointer;
@@ -79,7 +58,6 @@ export default {
   transition: 0.4s;
   border-radius: 34px;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -92,11 +70,9 @@ export default {
   transition: 0.4s;
   border-radius: 50%;
 }
-
 input:checked + .slider {
   background-color: #2ecc71;
 }
-
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
