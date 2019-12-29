@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="clock-face"
-    :style="'background-color:'+ backgroundImage + ';width: ' + size + 'px;height: ' + size + 'px;'"
-  >
+  <div class="clock-face" :style="clockStyle">
     <div
       v-for="n in 60"
       :key="n"
@@ -20,21 +17,45 @@ export default {
     dotMinutesSettings: Object,
     dotFifthSettings: Object,
     dotQuarterSettings: Object,
-    backgroundImage: String,
-    size: Number
+    watchFaceSettings: Object
+  },
+  computed: {
+    clockStyle() {
+      return (
+        "background: hsl(" +
+        this.watchFaceSettings.hue +
+        ", 100%, " +
+        this.watchFaceSettings.luminosity +
+        "%);" +
+        "width: " +
+        this.watchFaceSettings.size +
+        "px;height: " +
+        this.watchFaceSettings.size +
+        "px;"
+      );
+    }
   },
   methods: {
     dotSettings(n) {
-      if (!((n * 6) % 90) && !!this.dotQuarterSettings)
+      if (
+        !((n * 6) % 90) &&
+        !!this.dotQuarterSettings &&
+        this.dotQuarterSettings.active
+      )
         return this.dotQuarterSettings;
-      if (!((n * 6) % 30) && !!this.dotFifthSettings)
+      if (
+        !((n * 6) % 30) &&
+        !!this.dotFifthSettings &&
+        this.dotFifthSettings.active
+      )
         return this.dotFifthSettings;
-      if (!!this.dotMinutesSettings) return this.dotMinutesSettings;
+      if (!!this.dotMinutesSettings && this.dotMinutesSettings.active)
+        return this.dotMinutesSettings;
       return {
-        space: 20,
-        width: 5,
-        height: 5,
-        radius: 5,
+        space: 0,
+        width: 0,
+        height: 0,
+        radius: 0,
         hue: 50,
         luminosity: 50
       };

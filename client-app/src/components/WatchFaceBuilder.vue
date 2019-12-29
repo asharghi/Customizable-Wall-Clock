@@ -1,43 +1,18 @@
 <template>
   <div class="container">
     <div class="empty-settings-row"></div>
-    <BoolSetting
-      label="Aktiver"
-      :modelValue="localSettings.active"
-      @change="updateValue('active', $event)"
+    <SliderSetting
+      label="Størrelse"
+      :min="500"
+      :max="2000"
+      :modelValue="localSettings.size"
+      @change="updateValue('size', parseInt($event))"
     />
     <div class="empty-settings-row"></div>
-    <SliderSetting
-      label="Bredde"
-      :min="1"
-      :max="25"
-      :modelValue="localSettings.width"
-      :disabled="!localSettings.active"
-      @change="updateValue('width', parseInt($event))"
-    />
-    <SliderSetting
-      label="Høyde"
-      :min="1"
-      :max="50"
-      :modelValue="localSettings.height"
-      :disabled="!localSettings.active"
-      @change="updateValue('height', parseInt($event))"
-    />
-    <SliderSetting
-      label="Radius"
-      :min="0"
-      :max="20"
-      :modelValue="localSettings.radius"
-      :disabled="!localSettings.active"
-      @change="updateValue('radius', parseInt($event))"
-    />
-    <SliderSetting
-      label="Luft fra kanten"
-      :min="0"
-      :max="50"
-      :modelValue="localSettings.space"
-      :disabled="!localSettings.active"
-      @change="updateValue('space', parseInt($event))"
+    <BoolSetting
+      label="Bruk bakgrunnsbilde"
+      :modelValue="localSettings.useimage"
+      @change="updateValue('useimage', $event)"
     />
     <div class="empty-settings-row"></div>
     <SliderSetting
@@ -46,7 +21,7 @@
       :max="360"
       :modelValue="localSettings.hue"
       :hideNumberValue="true"
-      :disabled="!localSettings.active"
+      :disabled="localSettings.useimage"
       @change="updateValue('hue', parseInt($event))"
       sliderClass="color-picker"
     />
@@ -56,7 +31,7 @@
       :max="100"
       :modelValue="localSettings.luminosity"
       :hideNumberValue="true"
-      :disabled="!localSettings.active"
+      :disabled="localSettings.useimage"
       @change="updateValue('luminosity', parseInt($event))"
       sliderClass="darkness-picker"
     />
@@ -76,13 +51,10 @@ export default {
       type: Object,
       default: () => {
         return {
-          space: 20,
-          width: 5,
-          height: 5,
-          radius: 5,
+          size: 700,
+          useimage: false,
           hue: 50,
-          luminosity: 50,
-          active: false
+          luminosity: 50
         };
       }
     }

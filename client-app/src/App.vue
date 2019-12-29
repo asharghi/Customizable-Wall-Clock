@@ -2,30 +2,56 @@
   <div class="fullsize">
     <div v-if="showClockOnly">
       <Clock
-        :dotMinutesSettings="dotMinutesSettings"
-        :dotFifthSettings="dotMinutesSettings"
-        :dotQuarterSettings="dotMinutesSettings"
-        backgroundImage="yellow"
-        :size="800"
+        :dotMinutesSettings="clockSettings.dotMinutesSettings"
+        :dotFifthSettings="clockSettings.dotFifthSettings"
+        :dotQuarterSettings="clockSettings.dotQuarterSettings"
+        :watchFaceSettings="clockSettings.watchFaceSettings"
       />
     </div>
     <div v-else class="settings">
       <SettingsActionBar
-        @back="settingsPage = ''"
-        :previous="!settingsPage? '': 'Tilbake'"
-        :current="!settingsPage? 'Innstillinger': settingsPage"
+        @back="displaySettingForProperty = ''"
+        :previous="!displaySettingForProperty? '': 'Tilbake'"
+        :current="!displaySettingForProperty? 'Innstillinger': displaySettingForProperty"
       />
-      <transition :name="settingsPage ? 'slide' : 'slideback'">
-        <DotSettingsBuilder
-          v-show="settingsPage === 'Minutt-element'"
-          :settings="dotMinutesSettings"
-          @change="dotMinutesSettingsChanged"
-        />
+      <transition :name="displaySettingForProperty ? 'slide' : 'slideback'">
+        <div class="root-settings" v-show="displaySettingForProperty">
+          <DotSettingsBuilder
+            v-for="dotSetting in dotSettings"
+            :key="dotSetting.name"
+            v-show="displaySettingForProperty === dotSetting.label"
+            :settings="clockSettings[dotSetting.name]"
+            @change="clockSettingsPropertyChanged(dotSetting.name, $event)"
+          />
+          <WatchFaceBuilder
+            v-show="displaySettingForProperty === 'Urskive'"
+            :settings="clockSettings.watchFaceSettings"
+            @change="clockSettingsPropertyChanged('watchFaceSettings', $event)"
+          />
+        </div>
       </transition>
-      <transition :name="settingsPage ? 'slide' : 'slideback'">
-        <div class="root-settings" v-show="!settingsPage" @click="settingsPage = 'Minutt-element'">
+      <transition :name="displaySettingForProperty ? 'slide' : 'slideback'">
+        <div class="root-settings" v-show="!displaySettingForProperty">
           <div class="empty-settings-row"></div>
-          <div class="settings-row settings-font">Minutt-element</div>
+          <div
+            class="settings-row settings-font darker"
+            @click="displaySettingForProperty = 'Urskive'"
+          >Urskive</div>
+          <div class="empty-settings-row"></div>
+          <div
+            v-for="dotSetting in dotSettings"
+            :key="dotSetting.name"
+            class="settings-row settings-font darker"
+            @click="displaySettingForProperty = dotSetting.label"
+          >
+            {{dotSetting.label}}
+            <div class="peek-setting">{{clockSettings[dotSetting.name].active ? 'På' : 'Av'}}</div>
+            <div class="edit-icon"></div>
+          </div>
+          <div class="empty-settings-row"></div>
+          <div class="settings-row settings-font darker">Time-peker</div>
+          <div class="settings-row settings-font darker">Minutt-peker</div>
+          <div class="settings-row settings-font darker">Sekund-peker</div>
         </div>
       </transition>
     </div>
@@ -36,35 +62,57 @@
 import Clock from "./components/Clock.vue";
 import SettingsActionBar from "./components/SettingsActionBar.vue";
 import DotSettingsBuilder from "./components/DotSettingsBuilder.vue";
+import WatchFaceBuilder from "./components/WatchFaceBuilder.vue";
 const signalR = require("@aspnet/signalr");
 
 export default {
   components: {
     Clock,
     SettingsActionBar,
-    DotSettingsBuilder
+    DotSettingsBuilder,
+    WatchFaceBuilder
   },
   data() {
     return {
-      settingsPage: "",
+      displaySettingForProperty: "",
       showClockOnly: false,
       connection: "",
-      messages: [],
-      dotMinutesSettings: {
-        space: 20,
-        width: 5,
-        height: 5,
-        radius: 5,
-        hue: 50,
-        luminosity: 50,
-        active: false
+      dotSettings: [
+        { label: "Hvert element", name: "dotMinutesSettings" },
+        { label: "Hvert femte element", name: "dotFifthSettings" },
+        { label: "Hvert femtene element", name: "dotQuarterSettings" }
+      ],
+      clockSettings: {
+        dotMinutesSettings: {
+          active: false,
+          width: 1,
+          height: 1,
+          hue: 0,
+          luminosity: 50
+        },
+        dotFifthSettings: {
+          active: false,
+          width: 1,
+          height: 1,
+          hue: 0,
+          luminosity: 50
+        },
+        dotQuarterSettings: {
+          active: false,
+          width: 1,
+          height: 1,
+          hue: 0,
+          luminosity: 50
+        },
+        watchFaceSettings: { size: 700, hue: 50, luminosity: 50 }
       }
     };
   },
   methods: {
-    dotMinutesSettingsChanged(newSettings) {
+    clockSettingsPropertyChanged(propertyName, newSettings) {
+      this.clockSettings[propertyName] = newSettings;
       this.connection
-        .invoke("SendMessage", JSON.stringify(newSettings))
+        .invoke("SendMessage", JSON.stringify(this.clockSettings))
         .catch(function(err) {
           this.connect();
           return console.error(err.toSting());
@@ -89,8 +137,7 @@ export default {
     const comp = this;
     comp.connection.start();
     comp.connection.on("ReceiveMessage", messageJson => {
-      comp.messages.push(messageJson);
-      comp.dotMinutesSettings = JSON.parse(messageJson);
+      comp.clockSettings = JSON.parse(messageJson);
     });
   }
 };
@@ -122,10 +169,26 @@ export default {
   font-weight: 100;
   font-size: 14px;
 }
+.darker {
+  color: #1c1c1e;
+}
 .root-settings {
   display: inline-block;
   position: absolute;
   width: 100%;
+}
+.edit-icon {
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid #d8d8d8;
+  border-bottom: 2px solid #d8d8d8;
+  transform: rotate(225deg);
+  border-radius: 2px;
+}
+.peek-setting {
+  color: #5c5c5c;
+  position: absolute;
+  right: 40px;
 }
 .slide-leave-active,
 .slide-enter-active,
