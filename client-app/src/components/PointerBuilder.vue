@@ -10,7 +10,7 @@
     <SliderSetting
       label="Bredde"
       :min="1"
-      :max="25"
+      :max="1000"
       :modelValue="localSettings.width"
       :disabled="!localSettings.active"
       @change="updateValue('width', parseInt($event))"
@@ -30,14 +30,6 @@
       :modelValue="localSettings.radius"
       :disabled="!localSettings.active"
       @change="updateValue('radius', parseInt($event))"
-    />
-    <SliderSetting
-      label="Luft fra kanten"
-      :min="0"
-      :max="50"
-      :modelValue="localSettings.space"
-      :disabled="!localSettings.active"
-      @change="updateValue('space', parseInt($event))"
     />
     <div class="empty-settings-row"></div>
     <SliderSetting
@@ -74,7 +66,6 @@ export default {
       type: Object,
       default: () => {
         return {
-          space: 20,
           width: 5,
           height: 5,
           radius: 5,

@@ -95,8 +95,7 @@ export default {
     #00aaff,
     #2b00ff,
     #ff00ff,
-    #ff002b,
-    black
+    #ff002b
   );
 }
 .range-slider.darkness-picker {

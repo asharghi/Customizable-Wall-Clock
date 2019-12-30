@@ -6,6 +6,9 @@
         :dotFifthSettings="clockSettings.dotFifthSettings"
         :dotQuarterSettings="clockSettings.dotQuarterSettings"
         :watchFaceSettings="clockSettings.watchFaceSettings"
+        :secondPointerSettings="clockSettings.secondPointerSettings"
+        :minutePointerSettings="clockSettings.minutePointerSettings"
+        :hourPointerSettings="clockSettings.hourPointerSettings"
       />
     </div>
     <div v-else class="settings">
@@ -28,6 +31,13 @@
             :settings="clockSettings.watchFaceSettings"
             @change="clockSettingsPropertyChanged('watchFaceSettings', $event)"
           />
+          <PointerBuilder
+            v-for="pointerSetting in pointerSettings"
+            :key="pointerSetting.name"
+            v-show="displaySettingForProperty === pointerSetting.label"
+            :settings="clockSettings[pointerSetting.name]"
+            @change="clockSettingsPropertyChanged(pointerSetting.name, $event)"
+          />
         </div>
       </transition>
       <transition :name="displaySettingForProperty ? 'slide' : 'slideback'">
@@ -49,9 +59,16 @@
             <div class="edit-icon"></div>
           </div>
           <div class="empty-settings-row"></div>
-          <div class="settings-row settings-font darker">Time-peker</div>
-          <div class="settings-row settings-font darker">Minutt-peker</div>
-          <div class="settings-row settings-font darker">Sekund-peker</div>
+          <div
+            v-for="pointerSetting in pointerSettings"
+            :key="pointerSetting.name"
+            class="settings-row settings-font darker"
+            @click="displaySettingForProperty = pointerSetting.label"
+          >
+            {{pointerSetting.label}}
+            <div class="peek-setting">{{clockSettings[pointerSetting.name].active ? 'På' : 'Av'}}</div>
+            <div class="edit-icon"></div>
+          </div>
         </div>
       </transition>
     </div>
@@ -63,6 +80,7 @@ import Clock from "./components/Clock.vue";
 import SettingsActionBar from "./components/SettingsActionBar.vue";
 import DotSettingsBuilder from "./components/DotSettingsBuilder.vue";
 import WatchFaceBuilder from "./components/WatchFaceBuilder.vue";
+import PointerBuilder from "./components/PointerBuilder.vue";
 const signalR = require("@aspnet/signalr");
 
 export default {
@@ -70,7 +88,8 @@ export default {
     Clock,
     SettingsActionBar,
     DotSettingsBuilder,
-    WatchFaceBuilder
+    WatchFaceBuilder,
+    PointerBuilder
   },
   data() {
     return {
@@ -82,27 +101,62 @@ export default {
         { label: "Hvert femte element", name: "dotFifthSettings" },
         { label: "Hvert femtene element", name: "dotQuarterSettings" }
       ],
+      pointerSettings: [
+        { label: "Time-peker", name: "hourPointerSettings" },
+        { label: "Minutt-peker", name: "minutePointerSettings" },
+        { label: "Sekund-peker", name: "secondPointerSettings" }
+      ],
       clockSettings: {
         dotMinutesSettings: {
-          active: false,
-          width: 1,
-          height: 1,
+          space: 0,
+          width: 0,
+          height: 0,
+          radius: 0,
           hue: 0,
-          luminosity: 50
+          luminosity: 50,
+          active: false
         },
         dotFifthSettings: {
-          active: false,
-          width: 1,
-          height: 1,
+          space: 0,
+          width: 0,
+          height: 0,
+          radius: 0,
           hue: 0,
-          luminosity: 50
+          luminosity: 50,
+          active: false
         },
         dotQuarterSettings: {
-          active: false,
-          width: 1,
-          height: 1,
+          space: 0,
+          width: 0,
+          height: 0,
+          radius: 0,
           hue: 0,
-          luminosity: 50
+          luminosity: 50,
+          active: false
+        },
+        secondPointerSettings: {
+          width: 300,
+          height: 5,
+          hue: 360,
+          luminosity: 50,
+          radius: 0,
+          active: false
+        },
+        minutePointerSettings: {
+          width: 300,
+          height: 15,
+          hue: 360,
+          luminosity: 50,
+          radius: 0,
+          active: false
+        },
+        hourPointerSettings: {
+          width: 150,
+          height: 15,
+          hue: 360,
+          luminosity: 50,
+          radius: 0,
+          active: false
         },
         watchFaceSettings: { size: 700, hue: 50, luminosity: 50 }
       }
@@ -110,11 +164,12 @@ export default {
   },
   methods: {
     clockSettingsPropertyChanged(propertyName, newSettings) {
+      const comp = this;
       this.clockSettings[propertyName] = newSettings;
       this.connection
         .invoke("SendMessage", JSON.stringify(this.clockSettings))
         .catch(function(err) {
-          this.connect();
+          comp.connect();
           return console.error(err.toSting());
         });
     },
