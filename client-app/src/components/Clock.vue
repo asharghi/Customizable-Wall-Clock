@@ -2,11 +2,19 @@
   <div class="clock-face center" :style="clockStyle">
     <div
       v-for="n in 60"
-      :key="n"
+      :key="n+'-dot'"
       class="dot-container center"
       :style="'transform: translate(-50%, -50%) rotate(' + (n * 6) + 'deg)'"
     >
       <div :style="styleString(n)"></div>
+    </div>
+    <div
+      v-for="n in 12"
+      :key="n+'-font'"
+      class="dot-container center"
+      :style="'transform: translate(-50%, -50%) rotate(' + (n * 30) + 'deg)'"
+    >
+      <div :style="fontStyle(n)">{{fontSettings(n).fontface === 'Geek' ? romanNumber(n) : n}}</div>
     </div>
     <div class="center single-pixel">
       <div :style="minutePointerStyle"></div>
@@ -32,6 +40,8 @@ export default {
     secondPointerSettings: Object,
     minutePointerSettings: Object,
     hourPointerSettings: Object,
+    fontHourSettings: Object,
+    fontQuarterSettings: Object,
     watchFaceSettings: Object
   },
   computed: {
@@ -54,6 +64,23 @@ export default {
     setInterval(this.updateTime, 1000);
   },
   methods: {
+    romanNumber(n) {
+      const map = {
+        1: "1",
+        2: "11",
+        3: "111",
+        4: "1V",
+        5: "V",
+        6: "V1",
+        7: "V11",
+        8: "V111",
+        9: "1X",
+        10: "X",
+        11: "X1",
+        12: "X11"
+      };
+      return map[n];
+    },
     updateTime() {
       const comp = this;
       const now = new Date();
@@ -73,6 +100,25 @@ export default {
         comp.hourPointerSettings,
         hours
       );
+    },
+    fontSettings(n) {
+      if (
+        !(n % 3) &&
+        !!this.fontQuarterSettings &&
+        this.fontQuarterSettings.active
+      )
+        return this.fontQuarterSettings;
+
+      if (this.fontHourSettings && this.fontHourSettings.active)
+        return this.fontHourSettings;
+
+      return {
+        active: false,
+        size: 0,
+        hue: 360,
+        luminosity: 50,
+        space: 0
+      };
     },
     dotSettings(n) {
       if (
@@ -97,6 +143,24 @@ export default {
         hue: 50,
         luminosity: 50
       };
+    },
+    fontStyle(n) {
+      const fontSettings = this.fontSettings(n);
+      return (
+        "font-family: " +
+        fontSettings.fontface +
+        "; margin-top: " +
+        fontSettings.space +
+        "px; font-size: " +
+        fontSettings.size +
+        "px; transform: rotate(-" +
+        n * 30 +
+        "deg);color: hsl(" +
+        fontSettings.hue +
+        ", 100%, " +
+        fontSettings.luminosity +
+        "%);"
+      );
     },
     styleString(n) {
       const dotSettings = this.dotSettings(n);

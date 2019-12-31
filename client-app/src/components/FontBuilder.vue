@@ -1,19 +1,27 @@
 <template>
   <div class="container">
     <div class="empty-settings-row"></div>
+    <BoolSetting
+      label="Aktiver"
+      :modelValue="localSettings.active"
+      @change="updateValue('active', $event)"
+    />
+    <div class="empty-settings-row"></div>
     <SliderSetting
       label="Størrelse"
-      :min="500"
-      :max="2000"
+      :min="0"
+      :max="100"
       :modelValue="localSettings.size"
+      :disabled="!localSettings.active"
       @change="updateValue('size', parseInt($event))"
     />
-    <div v-if="false" class="empty-settings-row"></div>
-    <BoolSetting
-      v-if="false"
-      label="Bruk bakgrunnsbilde"
-      :modelValue="localSettings.useimage"
-      @change="updateValue('useimage', $event)"
+     <SliderSetting
+      label="Luft fra kanten"
+      :min="0"
+      :max="50"
+      :modelValue="localSettings.space"
+      :disabled="!localSettings.active"
+      @change="updateValue('space', parseInt($event))"
     />
     <div class="empty-settings-row"></div>
     <SliderSetting
@@ -21,7 +29,7 @@
       :min="0"
       :max="360"
       :modelValue="localSettings.hue"
-      :disabled="localSettings.useimage"
+      :disabled="!localSettings.active"
       @change="updateValue('hue', parseInt($event))"
       sliderClass="color-picker"
     />
@@ -30,30 +38,36 @@
       :min="0"
       :max="100"
       :modelValue="localSettings.luminosity"
-      :disabled="localSettings.useimage"
+      :disabled="!localSettings.active"
       @change="updateValue('luminosity', parseInt($event))"
       sliderClass="darkness-picker"
     />
+    <div class="empty-settings-row"></div>
+    <FontFaceSetting @selected="updateValue('fontface', $event)"/>
   </div>
 </template>
 
 <script>
 import SliderSetting from "./SliderSetting";
 import BoolSetting from "./BoolSetting";
+import FontFaceSetting from "./FontFaceSetting";
 export default {
   components: {
     SliderSetting,
-    BoolSetting
+    BoolSetting,
+    FontFaceSetting
   },
   props: {
     settings: {
       type: Object,
       default: () => {
         return {
-          size: 700,
-          useimage: false,
+          width: 5,
+          height: 5,
+          radius: 5,
           hue: 50,
-          luminosity: 50
+          luminosity: 50,
+          active: false
         };
       }
     }

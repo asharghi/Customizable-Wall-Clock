@@ -9,6 +9,8 @@
         :secondPointerSettings="clockSettings.secondPointerSettings"
         :minutePointerSettings="clockSettings.minutePointerSettings"
         :hourPointerSettings="clockSettings.hourPointerSettings"
+        :fontHourSettings="clockSettings.fontHourSettings"
+        :fontQuarterSettings="clockSettings.fontQuarterSettings"
       />
     </div>
     <div v-else class="settings">
@@ -38,6 +40,13 @@
             :settings="clockSettings[pointerSetting.name]"
             @change="clockSettingsPropertyChanged(pointerSetting.name, $event)"
           />
+          <FontBuilder
+            v-for="fontSetting in fontSettings"
+            :key="fontSetting.name"
+            v-show="displaySettingForProperty === fontSetting.label"
+            :settings="clockSettings[fontSetting.name]"
+            @change="clockSettingsPropertyChanged(fontSetting.name, $event)"
+          />
         </div>
       </transition>
       <transition :name="displaySettingForProperty ? 'slide' : 'slideback'">
@@ -48,27 +57,23 @@
             @click="displaySettingForProperty = 'Urskive'"
           >Urskive</div>
           <div class="empty-settings-row"></div>
-          <div
-            v-for="dotSetting in dotSettings"
-            :key="dotSetting.name"
-            class="settings-row settings-font darker"
-            @click="displaySettingForProperty = dotSetting.label"
-          >
-            {{dotSetting.label}}
-            <div class="peek-setting">{{clockSettings[dotSetting.name].active ? 'På' : 'Av'}}</div>
-            <div class="edit-icon"></div>
-          </div>
+          <RootSettingRowGroup
+            :rows="dotSettings"
+            :clockSettings="clockSettings"
+            @selected="displaySettingForProperty = $event"
+          />
           <div class="empty-settings-row"></div>
-          <div
-            v-for="pointerSetting in pointerSettings"
-            :key="pointerSetting.name"
-            class="settings-row settings-font darker"
-            @click="displaySettingForProperty = pointerSetting.label"
-          >
-            {{pointerSetting.label}}
-            <div class="peek-setting">{{clockSettings[pointerSetting.name].active ? 'På' : 'Av'}}</div>
-            <div class="edit-icon"></div>
-          </div>
+          <RootSettingRowGroup
+            :rows="pointerSettings"
+            :clockSettings="clockSettings"
+            @selected="displaySettingForProperty = $event"
+          />
+          <div class="empty-settings-row"></div>
+          <RootSettingRowGroup
+            :rows="fontSettings"
+            :clockSettings="clockSettings"
+            @selected="displaySettingForProperty = $event"
+          />
         </div>
       </transition>
     </div>
@@ -81,6 +86,8 @@ import SettingsActionBar from "./components/SettingsActionBar.vue";
 import DotSettingsBuilder from "./components/DotSettingsBuilder.vue";
 import WatchFaceBuilder from "./components/WatchFaceBuilder.vue";
 import PointerBuilder from "./components/PointerBuilder.vue";
+import FontBuilder from "./components/FontBuilder.vue";
+import RootSettingRowGroup from "./components/RootSettingRowGroup.vue";
 const signalR = require("@aspnet/signalr");
 
 export default {
@@ -89,13 +96,19 @@ export default {
     SettingsActionBar,
     DotSettingsBuilder,
     WatchFaceBuilder,
-    PointerBuilder
+    PointerBuilder,
+    FontBuilder,
+    RootSettingRowGroup
   },
   data() {
     return {
       displaySettingForProperty: "",
       showClockOnly: false,
       connection: "",
+      fontSettings: [
+        { label: "Tekststil per time", name: "fontHourSettings" },
+        { label: "Tekststil per tredje time", name: "fontQuarterSettings" }
+      ],
       dotSettings: [
         { label: "Hvert element", name: "dotMinutesSettings" },
         { label: "Hvert femte element", name: "dotFifthSettings" },
@@ -157,6 +170,22 @@ export default {
           luminosity: 50,
           radius: 0,
           active: false
+        },
+        fontHourSettings: {
+          active: true,
+          fontface: "Abel",
+          size: 40,
+          hue: 360,
+          luminosity: 50,
+          space: 0
+        },
+        fontQuarterSettings: {
+          active: false,
+          fontface: "Abel",
+          size: 40,
+          hue: 360,
+          luminosity: 50,
+          space: 0
         },
         watchFaceSettings: { size: 700, hue: 50, luminosity: 50 }
       }
@@ -258,5 +287,54 @@ export default {
 .slide-leave-to,
 .slideback-enter {
   transform: translate(-100%, 0);
+}
+
+@font-face {
+  font-family: "Abel";
+  src: url("/fonts/Abel.ttf");
+}
+@font-face {
+  font-family: "AbrilFatface";
+  src: url("/fonts/AbrilFatface.ttf");
+}
+@font-face {
+  font-family: "Anton";
+  src: url("/fonts/Anton.ttf");
+}
+@font-face {
+  font-family: "Bitter";
+  src: url("/fonts/Bitter.ttf");
+}
+@font-face {
+  font-family: "CormorantGaramond";
+  src: url("/fonts/CormorantGaramond.ttf");
+}
+@font-face {
+  font-family: "Geek";
+  src: url("/fonts/Geek.ttf");
+}
+@font-face {
+  font-family: "Kalam";
+  src: url("/fonts/Kalam.ttf");
+}
+@font-face {
+  font-family: "Lobster";
+  src: url("/fonts/Lobster.ttf");
+}
+@font-face {
+  font-family: "Monoton";
+  src: url("/fonts/Monoton.ttf");
+}
+@font-face {
+  font-family: "OldStandardTT";
+  src: url("/fonts/OldStandardTT.ttf");
+}
+@font-face {
+  font-family: "Orbitron";
+  src: url("/fonts/Orbitron.ttf");
+}
+@font-face {
+  font-family: "PTSans";
+  src: url("/fonts/PTSans.ttf");
 }
 </style>

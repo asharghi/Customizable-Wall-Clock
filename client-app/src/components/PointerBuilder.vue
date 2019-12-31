@@ -8,7 +8,7 @@
     />
     <div class="empty-settings-row"></div>
     <SliderSetting
-      label="Bredde"
+      label="Høyde"
       :min="1"
       :max="1000"
       :modelValue="localSettings.width"
@@ -16,7 +16,7 @@
       @change="updateValue('width', parseInt($event))"
     />
     <SliderSetting
-      label="Høyde"
+      label="Bredde"
       :min="1"
       :max="50"
       :modelValue="localSettings.height"
