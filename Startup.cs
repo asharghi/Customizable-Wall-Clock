@@ -22,7 +22,7 @@ namespace CustomizableWallClock
             services.AddControllers();
             // connect vue app - middleware
             services.AddSpaStaticFiles(options => options.RootPath = "client-app/dist");
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR("Endpoint=https://wallclock.service.signalr.net;AccessKey=yC4qyCK7f6WC12s7juQ/uOvcLOGrMnoh1w6kRrAEMH8=;Version=1.0;");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +44,8 @@ namespace CustomizableWallClock
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHub<ClockMaker>("/clockmaker");
+            app.UseAzureSignalR(routes => {
+                routes.MapHub<ClockMaker>("/clockmaker");
             });
 
             // use middleware and launch server for Vue
