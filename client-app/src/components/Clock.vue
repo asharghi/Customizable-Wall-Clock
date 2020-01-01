@@ -46,12 +46,17 @@ export default {
   },
   computed: {
     clockStyle() {
+      const background =
+        this.watchFaceSettings.useimage && this.watchFaceSettings.imagepath
+          ? "url(" + this.watchFaceSettings.imagepath + ");"
+          : "hsl(" +
+            this.watchFaceSettings.hue +
+            ", 100%, " +
+            this.watchFaceSettings.luminosity +
+            "%);";
       return (
-        "background: hsl(" +
-        this.watchFaceSettings.hue +
-        ", 100%, " +
-        this.watchFaceSettings.luminosity +
-        "%);" +
+        "background: " +
+        background +
         "width: " +
         this.watchFaceSettings.size +
         "px;height: " +
@@ -98,7 +103,7 @@ export default {
       );
       comp.hourPointerStyle = comp.pointerStyle(
         comp.hourPointerSettings,
-        hours
+        (hours * 5) + ((minutes/60) * 5)
       );
     },
     fontSettings(n) {

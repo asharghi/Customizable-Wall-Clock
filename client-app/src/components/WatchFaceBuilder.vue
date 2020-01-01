@@ -8,42 +8,46 @@
       :modelValue="localSettings.size"
       @change="updateValue('size', parseInt($event))"
     />
-    <div v-if="false" class="empty-settings-row"></div>
+    <div class="empty-settings-row"></div>
     <BoolSetting
-      v-if="false"
       label="Bruk bakgrunnsbilde"
       :modelValue="localSettings.useimage"
       @change="updateValue('useimage', $event)"
     />
     <div class="empty-settings-row"></div>
-    <SliderSetting
-      label="Farge"
-      :min="0"
-      :max="360"
-      :modelValue="localSettings.hue"
-      :disabled="localSettings.useimage"
-      @change="updateValue('hue', parseInt($event))"
-      sliderClass="color-picker"
-    />
-    <SliderSetting
-      label="Lysstyrke"
-      :min="0"
-      :max="100"
-      :modelValue="localSettings.luminosity"
-      :disabled="localSettings.useimage"
-      @change="updateValue('luminosity', parseInt($event))"
-      sliderClass="darkness-picker"
-    />
+    <div v-if="localSettings.useimage">
+      <BackgroundSetting @selected="updateValue('imagepath', $event)" :selectedPath="localSettings.imagepath" />
+    </div>
+    <div v-else>
+      <SliderSetting
+        label="Farge"
+        :min="0"
+        :max="360"
+        :modelValue="localSettings.hue"
+        @change="updateValue('hue', parseInt($event))"
+        sliderClass="color-picker"
+      />
+      <SliderSetting
+        label="Lysstyrke"
+        :min="0"
+        :max="100"
+        :modelValue="localSettings.luminosity"
+        @change="updateValue('luminosity', parseInt($event))"
+        sliderClass="darkness-picker"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import SliderSetting from "./SliderSetting";
 import BoolSetting from "./BoolSetting";
+import BackgroundSetting from "./BackgroundSetting";
 export default {
   components: {
     SliderSetting,
-    BoolSetting
+    BoolSetting,
+    BackgroundSetting
   },
   props: {
     settings: {
@@ -53,7 +57,8 @@ export default {
           size: 700,
           useimage: false,
           hue: 50,
-          luminosity: 50
+          luminosity: 50,
+          imagepath: ''
         };
       }
     }
