@@ -219,7 +219,6 @@ export default {
   },
   mounted() {
     const comp = this;
-    comp.connection.start();
     comp.connection.on("ReceiveMessage", messageJson => {
       comp.clockSettings = JSON.parse(messageJson);
     });
