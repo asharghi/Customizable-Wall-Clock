@@ -61,6 +61,10 @@ export default {
         this.watchFaceSettings.size +
         "px;height: " +
         this.watchFaceSettings.size +
+        "px;margin-left: " +
+        this.watchFaceSettings.left +
+        "px;margin-top: " +
+        this.watchFaceSettings.top +
         "px;"
       );
     }
@@ -103,7 +107,7 @@ export default {
       );
       comp.hourPointerStyle = comp.pointerStyle(
         comp.hourPointerSettings,
-        (hours * 5) + ((minutes/60) * 5)
+        hours * 5 + (minutes / 60) * 5
       );
     },
     fontSettings(n) {

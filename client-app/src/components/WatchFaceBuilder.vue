@@ -9,6 +9,21 @@
       @change="updateValue('size', parseInt($event))"
     />
     <div class="empty-settings-row"></div>
+    <SliderSetting
+      label="Horisontal posisjon"
+      :min="-150"
+      :max="150"
+      :modelValue="localSettings.left"
+      @change="updateValue('left', parseInt($event))"
+    />
+    <SliderSetting
+      label="Vertikal posisjon"
+      :min="-150"
+      :max="150"
+      :modelValue="localSettings.top"
+      @change="updateValue('top', parseInt($event))"
+    />
+    <div class="empty-settings-row"></div>
     <BoolSetting
       label="Bruk bakgrunnsbilde"
       :modelValue="localSettings.useimage"
@@ -16,7 +31,10 @@
     />
     <div class="empty-settings-row"></div>
     <div v-if="localSettings.useimage">
-      <BackgroundSetting @selected="updateValue('imagepath', $event)" :selectedPath="localSettings.imagepath" />
+      <BackgroundSetting
+        @selected="updateValue('imagepath', $event)"
+        :selectedPath="localSettings.imagepath"
+      />
     </div>
     <div v-else>
       <SliderSetting
@@ -54,11 +72,13 @@ export default {
       type: Object,
       default: () => {
         return {
-          size: 700,
+          size: 500,
+          left: 0,
+          top: 0,
           useimage: false,
           hue: 50,
           luminosity: 50,
-          imagepath: ''
+          imagepath: ""
         };
       }
     }

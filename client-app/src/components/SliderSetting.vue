@@ -72,15 +72,16 @@ export default {
   width: 100%;
   height: 3px;
   border-radius: 20px;
-  margin-top: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   background-color: #d8d8d8;
 }
 .range-slider::-webkit-slider-thumb {
   background: white;
   appearance: none;
   box-shadow: 1px 2px 26px 1px #bdbdbd;
-  width: 20px;
-  height: 20px;
+  width: 35px;
+  height: 35px;
   border: 5px solid #fafafa;
   border-radius: 50%;
 }
@@ -107,7 +108,7 @@ export default {
   background: #ffffff;
   border-bottom: 1px solid #d8d8d8;
 }
-.slider-row.disabled{
+.slider-row.disabled {
   opacity: 0.5;
 }
 .slider-number-value {

@@ -187,7 +187,15 @@ export default {
           luminosity: 50,
           space: 0
         },
-        watchFaceSettings: { size: 700, hue: 50, luminosity: 50 }
+        watchFaceSettings: {
+          size: 500,
+          left: 0,
+          top: 0,
+          useimage: false,
+          hue: 50,
+          luminosity: 50,
+          imagepath: ""
+        }
       }
     };
   },
@@ -197,9 +205,8 @@ export default {
       this.clockSettings[propertyName] = newSettings;
       this.connection
         .invoke("SendMessage", JSON.stringify(this.clockSettings))
-        .catch(function(err) {
+        .catch(function() {
           comp.connect();
-          return console.error(err.toSting());
         });
     },
     connect() {
@@ -207,20 +214,20 @@ export default {
         .withUrl("/clockmaker")
         .configureLogging(signalR.LogLevel.Information)
         .build();
-      this.connection.start().catch(function(err) {
-        return console.error(err.toSting());
-      });
+      this.connection.start().catch(function() {});
     }
   },
   created() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.showClockOnly = urlParams.get("showClockOnly");
+    this.showClockOnly = window.location.pathname.split("/").includes("clock");
+    var storedSettings = localStorage.getItem("storedSettings");
+    if (storedSettings) this.clockSettings = JSON.parse(storedSettings);
     this.connect();
   },
   mounted() {
     const comp = this;
     comp.connection.on("ReceiveMessage", messageJson => {
       comp.clockSettings = JSON.parse(messageJson);
+      localStorage.setItem("storedSettings", messageJson);
     });
   }
 };
@@ -232,7 +239,7 @@ export default {
   height: 100%;
 }
 .settings-row {
-  padding: 10px 20px 10px 20px;
+  padding: 20px;
   background: #ffffff;
   border-bottom: 1px solid #d8d8d8;
   display: flex;
