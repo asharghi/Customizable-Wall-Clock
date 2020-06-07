@@ -7,7 +7,6 @@
       @click="$emit('selected', setting.label)"
     >
       {{setting.label}}
-      <div class="peek-setting">{{clockSettings[setting.name].active ? 'På' : 'Av'}}</div>
       <div class="edit-icon"></div>
     </div>
   </div>

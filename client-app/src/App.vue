@@ -275,11 +275,6 @@ export default {
   transform: rotate(225deg);
   border-radius: 2px;
 }
-.peek-setting {
-  color: #5c5c5c;
-  position: absolute;
-  right: 40px;
-}
 .slide-leave-active,
 .slide-enter-active,
 .slideback-leave-active,
