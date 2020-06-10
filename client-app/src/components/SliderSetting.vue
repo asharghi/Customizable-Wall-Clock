@@ -59,7 +59,7 @@ export default {
     };
   },
   watch: {
-    modelValue: function(newValue, oldValue) {
+    modelValue: function(newValue) {
       this.localValue = newValue;
     }
   }

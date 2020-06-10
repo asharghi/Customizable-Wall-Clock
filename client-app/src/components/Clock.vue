@@ -30,7 +30,8 @@ export default {
     return {
       secondPointerStyle: "",
       minutePointerStyle: "",
-      hourPointerStyle: ""
+      hourPointerStyle: "",
+      intervalId: ""
     };
   },
   props: {
@@ -70,7 +71,10 @@ export default {
     }
   },
   mounted() {
-    setInterval(this.updateTime, 1000);
+    this.intervalId = setInterval(this.updateTime, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId);
   },
   methods: {
     romanNumber(n) {

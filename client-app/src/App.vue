@@ -2,6 +2,7 @@
   <div class="fullsize">
     <div v-if="showClockOnly">
       <Clock
+        v-if="!clockSettings.watchFaceSettings.userolex"
         :dotMinutesSettings="clockSettings.dotMinutesSettings"
         :dotFifthSettings="clockSettings.dotFifthSettings"
         :dotQuarterSettings="clockSettings.dotQuarterSettings"
@@ -12,6 +13,7 @@
         :fontHourSettings="clockSettings.fontHourSettings"
         :fontQuarterSettings="clockSettings.fontQuarterSettings"
       />
+      <Rolex v-else :watchFaceSettings="clockSettings.watchFaceSettings" />
     </div>
     <div v-else class="settings">
       <SettingsActionBar
@@ -82,6 +84,7 @@
 
 <script>
 import Clock from "./components/Clock.vue";
+import Rolex from "./components/Rolex.vue";
 import SettingsActionBar from "./components/SettingsActionBar.vue";
 import DotSettingsBuilder from "./components/DotSettingsBuilder.vue";
 import WatchFaceBuilder from "./components/WatchFaceBuilder.vue";
@@ -93,6 +96,7 @@ const signalR = require("@aspnet/signalr");
 export default {
   components: {
     Clock,
+    Rolex,
     SettingsActionBar,
     DotSettingsBuilder,
     WatchFaceBuilder,
@@ -192,6 +196,7 @@ export default {
           left: 0,
           top: 0,
           useimage: false,
+          userolex: false,
           hue: 50,
           luminosity: 50,
           imagepath: ""

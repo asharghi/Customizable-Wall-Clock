@@ -30,6 +30,12 @@
       @change="updateValue('useimage', $event)"
     />
     <div class="empty-settings-row"></div>
+    <BoolSetting
+      label="Bruk Rolex"
+      :modelValue="localSettings.userolex"
+      @change="updateValue('userolex', $event)"
+    />
+    <div class="empty-settings-row"></div>
     <div v-if="localSettings.useimage">
       <BackgroundSetting
         @selected="updateValue('imagepath', $event)"
@@ -76,6 +82,7 @@ export default {
           left: 0,
           top: 0,
           useimage: false,
+          userolex: false,
           hue: 50,
           luminosity: 50,
           imagepath: ""
