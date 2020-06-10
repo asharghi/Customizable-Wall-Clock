@@ -67,21 +67,21 @@
       <SliderSetting
         label="Rolex størrelse"
         :min="1"
-        :max="99"
+        :max="300"
         :modelValue="localSettings.rolexsize"
         @change="updateValue('rolexsize', parseInt($event))"
       />
       <SliderSetting
         label="Rolex horisontal posisjon"
-        :min="-150"
-        :max="150"
+        :min="-1000"
+        :max="1000"
         :modelValue="localSettings.rolexleft"
         @change="updateValue('rolexleft', parseInt($event))"
       />
       <SliderSetting
         label="Rolex vertikal posisjon"
-        :min="-200"
-        :max="200"
+        :min="-1000"
+        :max="1000"
         :modelValue="localSettings.rolextop"
         @change="updateValue('rolextop', parseInt($event))"
       />

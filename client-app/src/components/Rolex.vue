@@ -25,7 +25,7 @@ export default {
   computed: {
     clockStyle() {
       return `
-        transform: scale(0.${this.watchFaceSettings.rolexsize});
+        transform: scale(${this.watchFaceSettings.rolexsize / 100});
         transform-origin: 0 0;
         left: ${this.watchFaceSettings.rolexleft +
           Math.floor(window.innerWidth / 2)}px;
