@@ -54,8 +54,8 @@ export default {
       const hoursNode = document.querySelector(".hours.arrow");
       const dateNode = document.querySelector(".date");
 
-      const timeToDegree = time => {
-        return (time / 60) * 360;
+      const timeToDegree = (time, isHour) => {
+        return (time / (isHour ? 24 : 60)) * 360;
       };
       const rotateArrow = (node, degree) => {
         node.style.transform =
@@ -79,7 +79,7 @@ export default {
         const currentHour = now.getHours();
         if (currentHour != hours) {
           hours = currentHour;
-          rotateArrow(hoursNode, timeToDegree(hours));
+          rotateArrow(hoursNode, timeToDegree(hours, true));
         }
         const currentDay = now.getDate();
         if (currentDay != day) {

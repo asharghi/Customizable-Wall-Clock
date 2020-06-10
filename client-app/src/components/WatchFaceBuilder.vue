@@ -111,7 +111,7 @@ export default {
           userolex: false,
           rolexleft: 0,
           rolextop: 0,
-          rolexsize: 1,
+          rolexsize: 100,
           hue: 50,
           luminosity: 50,
           imagepath: ""
