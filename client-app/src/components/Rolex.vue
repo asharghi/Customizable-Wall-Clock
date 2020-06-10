@@ -25,10 +25,12 @@ export default {
   computed: {
     clockStyle() {
       return `
-        transform: scale(0.${this.watchFaceSettings.size});
+        transform: scale(0.${this.watchFaceSettings.rolexsize});
         transform-origin: 0 0;
-        left: ${this.watchFaceSettings.left}px;
-        top: ${this.watchFaceSettings.top}px;
+        left: ${this.watchFaceSettings.rolexleft +
+          Math.floor(window.innerWidth / 2)}px;
+        top: ${this.watchFaceSettings.rolextop +
+          Math.floor(window.innerHeight / 2)}px;
         position: absolute;
       `;
     }
