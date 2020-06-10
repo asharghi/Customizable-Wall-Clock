@@ -66,8 +66,8 @@
       <div class="empty-settings-row"></div>
       <SliderSetting
         label="Rolex størrelse"
-        :min="500"
-        :max="2000"
+        :min="1"
+        :max="99"
         :modelValue="localSettings.rolexsize"
         @change="updateValue('rolexsize', parseInt($event))"
       />
@@ -111,7 +111,7 @@ export default {
           userolex: false,
           rolexleft: 0,
           rolextop: 0,
-          rolexsize: 500,
+          rolexsize: 1,
           hue: 50,
           luminosity: 50,
           imagepath: ""
